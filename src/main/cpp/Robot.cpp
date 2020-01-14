@@ -8,7 +8,12 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "rev/CANSparkMax.h"
+#include <iostream>
+#include <fstream>
 using namespace std;
+
+  // prepares file 
+  static ofstream movefile;
 
 /**
  * Sample program displaying position and velocity on the SmartDashboard
@@ -44,6 +49,8 @@ class Robot : public frc::TimedRobot {
   rev::CANEncoder m_encoder_left_motor = m_leftLeadMotor->GetEncoder(); 
   rev::CANEncoder m_encoder_right_motor = m_rightLeadMotor->GetEncoder(); 
 
+
+
   /** Moves robot in one of four directions by
    * setting speed of left and right motors
    * after ensuring that both speeds are in range.
@@ -55,27 +62,24 @@ class Robot : public frc::TimedRobot {
         // INPUT TO THE MOTORS: 
         m_leftLeadMotor->Set(speedLeft);
         m_rightLeadMotor->Set(speedRight);
+        movefile << "To move" << direction << ", INPUT: speedLeft = " << speedLeft << ", speedRight = " << speedRight << "\n";
 
         // OUTPUT FROM THE ENCODERS:
         if (m_encoder_left_motor.GetVelocity() < m_encoder_right_motor.GetVelocity()) { // left
-          // STORE IN FILE
-          // OUTPUT "L" AS DIRECTION TO FILE
+          movefile << "OUTPUT: Robot moved L with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
         } else if (m_encoder_left_motor.GetVelocity() > m_encoder_right_motor.GetVelocity()) { // right
-          // STORE IN FILE
-          // OUTPUT "R" AS DIRECTION TO FILE
+          movefile << "OUTPUT: Robot moved R with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
         } else { // motor velocities are equal
           if (m_encoder_left_motor.GetVelocity() < 0) { // backward
-
+            movefile << "OUTPUT: Robot moved B with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
           } else if (m_encoder_left_motor.GetVelocity() > 0) { //forward
-
+            movefile << "OUTPUT: Robot moved F with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
           } else {
-            // ROBOT DID NOT MOVE AT ALL
+            movefile << "OUTPUT: Robot did not move. Left motor velocity = right motor velocity = 0." << "\n";
           };
         };
 
-        // moving forward
-        // moving backward
-      } else { // throw error
+      } else { // throw error: speeds out of range
         frc::SmartDashboard::PutString("Left motor speed out of range or", "Right motor speed out of range");
       };
     };
@@ -89,7 +93,10 @@ class Robot : public frc::TimedRobot {
    */
 
   public:
-    void RobotInit() {      
+    void RobotInit() {  
+      // opens output file  
+      movefile.open("robotdata.txt");
+
       /**
        * The RestoreFactoryDefaults method can be used to reset the configuration parameters
        * in the SPARK MAX to their factory default state. If no argument is passed, these
@@ -125,6 +132,9 @@ class Robot : public frc::TimedRobot {
       Move (-0.5, -0.5, 'B'); // backward
       Move (-0.5, 0.5, 'L'); // left
       Move (0.5, -0.5, 'R'); // right
+
+      // closes text file
+      movefile.close();
   };
 
   public:
