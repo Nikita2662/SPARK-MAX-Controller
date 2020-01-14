@@ -8,10 +8,10 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "rev/CANSparkMax.h"
+using namespace std;
 
 /**
  * Sample program displaying position and velocity on the SmartDashboard
- * 
  * Position is displayed in revolutions and velocity is displayed in RPM
  */
 class Robot : public frc::TimedRobot {
@@ -44,11 +44,40 @@ class Robot : public frc::TimedRobot {
   rev::CANEncoder m_encoder_left_motor = m_leftLeadMotor->GetEncoder(); 
   rev::CANEncoder m_encoder_right_motor = m_rightLeadMotor->GetEncoder(); 
 
-  // moves robot in one of four directions by
-  // setting speed of left and right motors
-  void Move(double speedLeft, double speedRight) {
-      m_leftLeadMotor->Set(speedLeft);
-      m_rightLeadMotor->Set(speedRight);
+  /** Moves robot in one of four directions by
+   * setting speed of left and right motors
+   * after ensuring that both speeds are in range.
+   * Uses the encoders and GetVelocity() to check
+   * in what direction the robot moves.
+  */
+  void Move(double speedLeft, double speedRight, char direction) {
+      if (speedLeft <= 1 && speedLeft >= -1 && speedRight <= 1 && speedRight >= -1) { // speeds in range
+        // INPUT TO THE MOTORS: 
+        m_leftLeadMotor->Set(speedLeft);
+        m_rightLeadMotor->Set(speedRight);
+
+        // OUTPUT FROM THE ENCODERS:
+        if (m_encoder_left_motor.GetVelocity() < m_encoder_right_motor.GetVelocity()) { // left
+          // STORE IN FILE
+          // OUTPUT "L" AS DIRECTION TO FILE
+        } else if (m_encoder_left_motor.GetVelocity() > m_encoder_right_motor.GetVelocity()) { // right
+          // STORE IN FILE
+          // OUTPUT "R" AS DIRECTION TO FILE
+        } else { // motor velocities are equal
+          if (m_encoder_left_motor.GetVelocity() < 0) { // backward
+
+          } else if (m_encoder_left_motor.GetVelocity() > 0) { //forward
+
+          } else {
+            // ROBOT DID NOT MOVE AT ALL
+          };
+        };
+
+        // moving forward
+        // moving backward
+      } else { // throw error
+        frc::SmartDashboard::PutString("Left motor speed out of range or", "Right motor speed out of range");
+      };
     };
 
   /**
@@ -60,7 +89,7 @@ class Robot : public frc::TimedRobot {
    */
 
   public:
-    void RobotInit() {
+    void RobotInit() {      
       /**
        * The RestoreFactoryDefaults method can be used to reset the configuration parameters
        * in the SPARK MAX to their factory default state. If no argument is passed, these
@@ -82,69 +111,26 @@ class Robot : public frc::TimedRobot {
        */
       m_leftFollowMotor->Follow(*m_leftLeadMotor);
       m_rightFollowMotor->Follow(*m_rightLeadMotor);
+
+      /**
+        * moves the robot in one of 4 directions at half speed
+        * if the robot is moving left, checks that the speed of the left motor < speed of right motor
+        * if the robot is moving right, checks that the speed of the right motor < speed of left motor
+        * Note: with a dynamic input, 3 ways to move left (and similarly for right):
+              * left motor: negative speed, right motor: positive speed
+              * left motor: relatively slower, right motor: relatively faster
+              * left motor: speed = 0; right motor: positive speed
+        */
+      Move (0.5, 0.5, 'F'); // forward
+      Move (-0.5, -0.5, 'B'); // backward
+      Move (-0.5, 0.5, 'L'); // left
+      Move (0.5, -0.5, 'R'); // right
   };
 
-
-  // IS THIS NECESSARY?
   public:
    Robot() { }
 
-  void TeleopPeriodic() override {
-    /**
-     * Encoder position is read from a CANEncoder object by calling the
-     * GetPosition() method.
-     * 
-     * GetPosition() returns the position of the encoder in units of revolutions
-     */
-
-    // IS THIS NECESSARY?
-    frc::SmartDashboard::PutNumber("Left Encoder Position", m_encoder_left_motor.GetPosition());
-    frc::SmartDashboard::PutNumber("Right Encoder Position", m_encoder_right_motor.GetPosition());
-
-    /**
-     * Encoder velocity is read from a CANEncoder object by calling the
-     * GetVelocity() method.
-     * 
-     * GetVelocity() returns the velocity of the encoder in units of RPM
-     */
-
-    // IS THIS NECESSARY?
-    frc::SmartDashboard::PutNumber("Left Encoder Velocity", m_encoder_left_motor.GetVelocity());
-    frc::SmartDashboard::PutNumber("Right Encoder Velocity", m_encoder_right_motor.GetVelocity());
-
-    /**
-     * moves the robot in one of 4 directions
-     * also checks if the range for the speed of the motors is between -0.5 and 0.5 (half speed)
-     * if the robot is moving left, checks that the speed of the left motor < speed of right motor
-     * if the robot is moving right, checks that the speed of the right motor < speed of left motor
-     * Note: with a dynamic input, 3 ways to move left (and similarly for right):
-          * left motor: negative speed, right motor: positive speed
-          * left motor: relatively slower, right motor: relatively faster
-          * left motor: speed = 0; right motor: positive speed
-     */
-    Move (0.5, 0.5); // forward
-    Move (-0.5, -0.5); // backward
-    Move (0, 0.5); // left
-    Move (0.5, 0); // right
-
-    /**
-     * uses the encoders and GetVelocity()
-     * to check in what direction the robot moves 
-     */
-
-    // if speed of left motor < speed of right, robot moving left
-    if (m_encoder_left_motor.GetVelocity() < m_encoder_right_motor.GetVelocity()) {
-      // STORE IN FILE
-    }
-
-    // if speed of left motor > speed of right, robot moving right
-    else if (m_encoder_left_motor.GetVelocity() > m_encoder_right_motor.GetVelocity()) {
-      // STORE IN FILE
-    };
-
-    // moving forward
-    // moving backward
-  };
+  void TeleopPeriodic() override { };
 };
 
 #ifndef RUNNING_FRC_TESTS
