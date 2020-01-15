@@ -44,11 +44,9 @@ class Robot : public frc::TimedRobot {
    * GetEncoder() method from an existing CANSparkMax object
    */
 
-  // CHECK FORMAT OF THESE FOLLOWING LINES: (also should these be pointers?)
   // no encoder object created for the follow motors because they will reflect the encoders on the lead motors
   rev::CANEncoder m_encoder_left_motor = m_leftLeadMotor->GetEncoder(); 
   rev::CANEncoder m_encoder_right_motor = m_rightLeadMotor->GetEncoder(); 
-
 
 
   /** Moves robot in one of four directions by
@@ -121,8 +119,6 @@ class Robot : public frc::TimedRobot {
 
       /**
         * moves the robot in one of 4 directions at half speed
-        * if the robot is moving left, checks that the speed of the left motor < speed of right motor
-        * if the robot is moving right, checks that the speed of the right motor < speed of left motor
         * Note: with a dynamic input, 3 ways to move left (and similarly for right):
               * left motor: negative speed, right motor: positive speed
               * left motor: relatively slower, right motor: relatively faster
