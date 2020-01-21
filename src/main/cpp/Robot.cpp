@@ -61,7 +61,7 @@ class Robot : public frc::TimedRobot {
         m_leftLeadMotor->Set(speedLeft);
         m_rightLeadMotor->Set(speedRight);
         movefile << "To move" << direction << ", INPUT: speedLeft = " << speedLeft << ", speedRight = " << speedRight << "\n";
-
+        
         // OUTPUT FROM THE ENCODERS:
         if (m_encoder_left_motor.GetVelocity() < m_encoder_right_motor.GetVelocity()) { // left
           movefile << "OUTPUT: Robot moved L with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
@@ -92,8 +92,12 @@ class Robot : public frc::TimedRobot {
 
   public:
     void RobotInit() {  
-      // opens output file  
-      movefile.open("robotdata.txt");
+      // opens file to send output/ append new output
+      movefile.open("movefile.txt", ios::out | ios::app); 
+
+      if(!movefile) {
+        // SEND ERROR MESSAGE
+      };
 
       /**
        * The RestoreFactoryDefaults method can be used to reset the configuration parameters
