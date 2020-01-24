@@ -33,11 +33,11 @@ class Robot : public frc::TimedRobot {
    * The example below initializes four brushless motors with CAN IDs 1, 2, 3 and 4. Change
    * these parameters to match your setup
    */ 
-  static const int leftLeadDeviceID = 1, leftFollowDeviceID = 2, rightLeadDeviceID = 3, rightFollowDeviceID = 4;
+  static const int leftLeadDeviceID = 3, rightLeadDeviceID = 13;// , rightFollowDeviceID = 4, leftFollowDeviceID = 2;
   rev::CANSparkMax* m_leftLeadMotor = new rev::CANSparkMax(leftLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_rightLeadMotor = new rev::CANSparkMax(rightLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless);
-  rev::CANSparkMax* m_leftFollowMotor = new rev::CANSparkMax(leftFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless);
-  rev::CANSparkMax* m_rightFollowMotor = new rev::CANSparkMax(rightFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless);
+  // rev::CANSparkMax* m_leftFollowMotor = new rev::CANSparkMax(leftFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless);
+  // rev::CANSparkMax* m_rightFollowMotor = new rev::CANSparkMax(rightFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless);
 
   /**
    * In order to read encoder values encoder objects are created using the 
@@ -107,8 +107,8 @@ class Robot : public frc::TimedRobot {
 
       m_leftLeadMotor->RestoreFactoryDefaults();
       m_rightLeadMotor->RestoreFactoryDefaults();
-      m_leftFollowMotor->RestoreFactoryDefaults();
-      m_rightFollowMotor->RestoreFactoryDefaults();
+      /* m_leftFollowMotor->RestoreFactoryDefaults();
+      m_rightFollowMotor->RestoreFactoryDefaults(); */
     
       /**
        * In CAN mode, one SPARK MAX can be configured to follow another. This is done by calling
@@ -118,8 +118,8 @@ class Robot : public frc::TimedRobot {
        * This is shown in the example below, where one motor on each side of our drive train is
        * configured to follow a lead motor.
        */
-      m_leftFollowMotor->Follow(*m_leftLeadMotor);
-      m_rightFollowMotor->Follow(*m_rightLeadMotor);
+      /* m_leftFollowMotor->Follow(*m_leftLeadMotor);
+      m_rightFollowMotor->Follow(*m_rightLeadMotor); */
 
       /**
         * moves the robot in one of 4 directions at half speed
