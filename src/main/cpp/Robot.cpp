@@ -72,13 +72,14 @@ class Robot : public frc::TimedRobot {
             movefile << "OUTPUT: Robot moved B with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
           } else if (m_encoder_left_motor.GetVelocity() > 0) { //forward
             movefile << "OUTPUT: Robot moved F with left motor velocity at = " << m_encoder_left_motor.GetVelocity() << " and right motor velocity at = " << m_encoder_right_motor.GetVelocity() << "\n";
-          } else {
+          } else { // no motion --> printing to text file and to smart dashboard
             movefile << "OUTPUT: Robot did not move. Left motor velocity = right motor velocity = 0." << "\n";
+            frc::SmartDashboard::PutString("ERROR: No motion detected", "\n");
           };
         };
 
       } else { // throw error: speeds out of range
-        frc::SmartDashboard::PutString("Left motor speed out of range or", "Right motor speed out of range");
+        frc::SmartDashboard::PutString("Left motor speed out of range OR", "Right motor speed out of range");
       };
     };
 
@@ -93,10 +94,10 @@ class Robot : public frc::TimedRobot {
   public:
     void RobotInit() {  
       // opens file to send output/ append new output
-      movefile.open("movefile.txt", ios::out | ios::app); 
+      movefile.open("/home/lvuser/Output.txt", ios::out | ios::app); 
 
       if(!movefile) {
-        // SEND ERROR MESSAGE
+        frc::SmartDashboard::PutString("ERROR: Unable to open file", "\n");
       };
 
       /**
@@ -110,7 +111,7 @@ class Robot : public frc::TimedRobot {
       m_leftFollowMotor->RestoreFactoryDefaults();
       m_rightFollowMotor->RestoreFactoryDefaults(); 
     
-      /**
+      /**  
        * In CAN mode, one SPARK MAX can be configured to follow another. This is done by calling
        * the Follow() method on the SPARK MAX you want to configure as a follower, and by passing
        * as a parameter the SPARK MAX you want to configure as a leader.
