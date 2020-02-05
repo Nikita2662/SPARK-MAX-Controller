@@ -33,7 +33,7 @@ class Robot : public frc::TimedRobot {
    * The example below initializes four brushless motors with CAN IDs 1, 2, 3 and 4. Change
    * these parameters to match your setup
    */ 
-  static const int leftLeadDeviceID = 14, rightLeadDeviceID = 13, rightFollowDeviceID = 12, leftFollowDeviceID = 15;
+  static const int leftLeadDeviceID = 12, rightLeadDeviceID = 13, rightFollowDeviceID = 14, leftFollowDeviceID = 15;
   rev::CANSparkMax* m_leftLeadMotor = new rev::CANSparkMax(leftLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_rightLeadMotor = new rev::CANSparkMax(rightLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless);
   rev::CANSparkMax* m_leftFollowMotor = new rev::CANSparkMax(leftFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless);
